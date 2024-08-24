@@ -6,6 +6,11 @@ from denpy.vn import VisualNovel
 
 
 def main():
+    generate_english_demo()
+    generate_spanish_demo()
+
+
+def generate_english_demo():
     vn = VisualNovel()
 
     vn.register_images(
@@ -106,6 +111,109 @@ def main():
     )
 
     vn.write_to(Path("out/demo_en.pdf"))
+
+
+def generate_spanish_demo():
+    vn = VisualNovel()
+
+    vn.register_images(
+        ImageResource("Background1", "assets/bg.jpg", scale=1.5),
+        ImageResource("Background2", "assets/bg2.jpg"),
+        ImageResource("CharaAnnoyed", "assets/annoyed.png", 250, -26, scale=0.7),
+        ImageResource("CharaDelighted", "assets/delighted.png", 250, -26, scale=0.7),
+        ImageResource("CharaNormal", "assets/normal.png", 250, -26, scale=0.7),
+        ImageResource("CharaSmile", "assets/smile.png", 250, -26, scale=0.7),
+        ImageResource("CharaSmile2", "assets/smile2.png", 250, -26, scale=0.7),
+    )
+
+    vn.register_nodes(
+        VnNode(
+            background="Background1",
+            speaker=None,
+            text="...",
+        ),
+        VnNode(
+            character="CharaNormal",
+            speaker="???",
+            text="¿Hmm?",
+        ),
+        VnNode(
+            character="CharaDelighted",
+            text="¡Oh, has despertado!",
+        ),
+        VnNode(
+            character="CharaSmile",
+            speaker=None,
+            text="¿Eh?",
+        ),
+        VnNode(
+            text="¿Quién eres?",
+        ),
+        VnNode(
+            text="¿¡D-dónde estoy!?",
+        ),
+        VnNode(
+            character="CharaDelighted",
+            speaker="PDF-chan",
+            text="¡Te doy la bienvenida a la demo de DenPy!",
+        ),
+        VnNode(
+            speaker=None,
+            text="¿Demo? ¿Qué dices?",
+        ),
+        VnNode(
+            speaker="PDF-chan",
+            text="¡Con esta librería, podrás crear novelas visuales dentro de archivos .pdf!",
+        ),
+        VnNode(
+            speaker=None,
+            text="No entiendo nada...",
+        ),
+        VnNode(
+            character="CharaSmile2",
+            speaker="PDF-chan",
+            text="No te preocupes, ¡te lo enseñaré!",
+        ),
+        VnNode(
+            background="Background2",
+            speaker=None,
+            text="...",
+        ),
+        VnNode(
+            text="¡¡Aaaah!!",
+        ),
+        VnNode(
+            character="CharaAnnoyed",
+            speaker="PDF-chan",
+            text="Como podrás notar, aún no tenemos transiciones suaves...",
+        ),
+        VnNode(
+            speaker=None,
+            text="¡DEJA DE MOVERME!",
+        ),
+        VnNode(
+            character="CharaSmile",
+            speaker="PDF-chan",
+            text="...ni sonidos... pero estamos trabajando en ello.",
+        ),
+        VnNode(
+            speaker=None,
+            text="¿Puedo irme ya?",
+        ),
+        VnNode(
+            character="CharaSmile2",
+            speaker="PDF-chan",
+            text="¡Seguro, hasta pronto!",
+        ),
+        VnNode(
+            background="Background1",
+            character=None,
+            speaker=None,
+            text="Genial... ahora, ¿cómo salgo de aquí...?",
+        ),
+    )
+
+    vn.write_to(Path("out/demo_es.pdf"))
 
 
 if __name__ == "__main__":
