@@ -1,8 +1,6 @@
 from pathlib import Path
 
-from denpy.image import ImageResource
-from denpy.models import VnNode
-from denpy.vn import VisualNovel
+from denpy import ImageResource, VisualNovel, VnNode
 
 
 def main():

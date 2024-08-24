@@ -1,5 +1,6 @@
 import zlib
 from dataclasses import dataclass, field
+from typing import Self
 
 from PIL import Image
 
@@ -20,7 +21,7 @@ class ImageResource:
     rgb: bytearray = field(default_factory=bytearray)
     alpha: bytearray = field(default_factory=bytearray)
 
-    def __post_init__(self):
+    def load(self) -> Self:
         with Image.open(self.path) as img:
             assert img.mode in ("RGB", "RGBA")
             has_alpha = "A" in img.mode
@@ -48,6 +49,7 @@ class ImageResource:
             self.rgb = bytearray(zlib.compress(self.rgb))
             if self.alpha:
                 self.alpha = bytearray(zlib.compress(self.alpha))
+        return self
 
     def to_streams(self, ref_index: int) -> list[Stream]:
         out = [

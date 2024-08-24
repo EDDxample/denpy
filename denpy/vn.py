@@ -1,9 +1,12 @@
+import logging
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
-from denpy.image import ImageResource
 from denpy.mapper import map_object
 from denpy.models import IndirectRef, Name, Stream, VnNode
+from denpy.resources import ImageResource
 
+# PDF params
 PAGE_SCALE = 0.7
 PAGE_WIDTH = 1280 * PAGE_SCALE
 PAGE_HEIGHT = 720 * PAGE_SCALE
@@ -17,15 +20,18 @@ class VisualNovel:
         self.__images: list[ImageResource] = []
         self.__nodes: list[VnNode] = []
 
-    def register_images(self, *images: ImageResource):
-        self.__images.extend(images)
+    def register_images(self, *images: ImageResource, n_image_processors=4):
+        with ProcessPoolExecutor(n_image_processors) as pool:
+            iterator = pool.map(ImageResource.load, images)
+
+        self.__images.extend(iterator)
 
     def register_nodes(self, *nodes: VnNode):
         self.__nodes.extend(nodes)
 
     def write_to(self, path: Path):
         objects = self.__get_pdf_base()
-        img_index = len(objects) + 1  # 6
+        img_index = len(objects) + 1
         for image in self.__images:
             # add img xobjects to object list
             streams = image.to_streams(img_index)
@@ -96,6 +102,8 @@ class VisualNovel:
             f.write(b"startxref\n")
             f.write(f"{xref_ptr}\n".encode())
             f.write(b"%%EOF")
+
+        print(f"VN saved at {path}")
 
     def __get_js_engine(self) -> str:
         with (Path(__file__).parent / "engine.js").open("r") as f:
