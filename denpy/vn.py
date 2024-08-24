@@ -66,13 +66,10 @@ class VisualNovel:
         textbox_index = len(objects[3]["Annots"]) - 2
         objects[3]["Annots"][textbox_index]["AA"]["Fo"]["JS"] = "onTextboxClick()"
 
-        trailer = {
-            "Size": len(objects) + 1,
-            "Root": IndirectRef(1),
-        }
+        self.__write_pdf(path, objects)
 
+    def __write_pdf(self, path: Path, objects: list):
         object_ptrs = []
-
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("wb") as f:
             f.write(b"%PDF-1.7\n\n")
@@ -97,7 +94,14 @@ class VisualNovel:
 
             # write trailer
             f.write(b"trailer\n")
-            f.write(map_object(trailer))
+            f.write(
+                map_object(
+                    {
+                        "Size": len(objects) + 1,
+                        "Root": IndirectRef(1),
+                    }
+                )
+            )
 
             f.write(b"startxref\n")
             f.write(f"{xref_ptr}\n".encode())
